@@ -59,8 +59,11 @@ class Login extends Component {
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-4 offset-md-4">
-                        <div>
-                            <div className="form-group">
+                        <div style={{textAlign: "center"}}>
+                            <div style={{marginTop: "10px", border: "1px solid blue"}}>
+                              <h3>Войти</h3>
+                            </div>
+                            <div className="form-group" style={{textAlign: "center", marginTop: "10px"}}>
                                 <label htmlFor="exampleInputEmail1">Email address</label>
                                 <input name="email" type="email" className="form-control" id="exampleInputEmail1"
                                        aria-describedby="emailHelp" placeholder="Enter email"
@@ -68,7 +71,7 @@ class Login extends Component {
                                     <small id="emailHelp" className="form-text text-muted">We'll never share your email with
                                         anyone else.</small>
                             </div>
-                            <div className="form-group">
+                            <div className="form-group" style={{textAlign: "center"}}>
                                 <label htmlFor="exampleInputPassword1">Password</label>
                                 <input name="password" type="password" className="form-control" id="exampleInputPassword1"
                                        placeholder="Password" onChange ={this.handleChange} value={this.state.password}/>
@@ -77,8 +80,8 @@ class Login extends Component {
                                 <input type="checkbox" className="form-check-input" id="exampleCheck1"/>
                                     <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
                             </div>
-                            <div className="form-group">
-                                <label>{this.state.errormsg}</label>
+                            <div className="form-group" hidden = {!this.state.errormsg ? true : false}>
+                                <label style={{font: "red 10px"}}>{!this.state.errormsg ? "" : "Ошибка! Повторите ещё раз!"}</label>
                             </div>
                             <button className="btn btn-primary" onClick={this.login}>Submit</button>
                         </div>

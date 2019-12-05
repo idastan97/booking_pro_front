@@ -2,6 +2,16 @@ import React from 'react';
 import axios from 'axios';
 import config from "./../core/config";
 
+function convert_to_bool(text){
+  if (text == 'Да'){
+    return true;
+  }
+  if (text == 'Нет'){
+    return false;
+  }
+  return null;
+}
+
 class AddAuditory extends React.Component{
   constructor(props) {
       super(props);
@@ -27,18 +37,19 @@ class AddAuditory extends React.Component{
         method: "POST",
         data: {
             capacity: self.state.capacity,
-            has_projector: self.state.hasProjector,
-            has_whiteboard: self.state.hasWhiteboard,
+            has_projector: convert_to_bool(self.state.hasProjector),
+            has_whiteboard: convert_to_bool(self.state.hasWhiteboard),
             volume: self.state.volume,
-            has_air_conditioning: self.state.hasAirConditioning,
-            has_noise_isolation: self.state.hasNoiseIsolation,
+            has_air_conditioning: convert_to_bool(self.state.hasAirConditioning),
+            has_noise_isolation: convert_to_bool(self.state.hasNoiseIsolation),
             computer_count: self.state.computerCount,
-            micro_count: self.state.microphoneCount,
-            has_internet: self.state.hasInternet,
-            has_speakers: self.state.hasSpeakers,
+            micro_count: convert_to_bool(self.state.microphoneCount),
+            has_internet: convert_to_bool(self.state.hasInternet),
+            has_speakers: convert_to_bool(self.state.hasSpeakers),
         },
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'token ' + localStorage.getItem('token'),
         }
     })
         .then(function (response) {
@@ -204,7 +215,7 @@ class AddAuditory extends React.Component{
                          {self.returnInputFor("microphoneCount")}
                          {self.returnDropdownFor("hasSpeakers")}
                          <div className="form-group" style={{textAlign: "center"}}>
-                             <button className="btn btn-primary" onClick={self.addAuditory}>Submit</button>
+                             <button className="btn btn-primary" onClick={self.addAuditory}>Отправить</button>
                          </div>
                       </div>
                   </div>

@@ -74,8 +74,8 @@ class IndexRouter extends React.Component{
                     <Switch>
                         <Route exact path='/login' render={() => self.state.authorized ? <Redirect to='/' /> : <Login authorize={self.authorize} />} />
                         <Route exact path='/register' render={() => self.state.authorized ? <Redirect to='/' /> : <Register authorize={self.authorize} />} />
-                        <Route exact path='/addAuditory' render={() => false ? <Redirect to='/' /> : <AddAuditory />} />
-                        <Route exact path='/addRequest' render={() => false ? <Redirect to='/' /> : <AddRequest />} />
+                        <Route exact path='/addAuditory' render={() => self.state.authorized ? <AddAuditory gstate={self.state} logout={self.logout} /> : <Redirect to='/login' />} />
+                        <Route exact path='/addRequest' render={() => self.state.authorized ? <AddRequest gstate={self.state} logout={self.logout} /> : <Redirect to='/login' />} />
                         <Route path='/' render={() => self.state.authorized ? <Home gstate={self.state} logout={self.logout} /> : <Redirect to='/login' />} />
                     </Switch>
                 </Router>

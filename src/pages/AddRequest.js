@@ -2,9 +2,23 @@ import React from 'react';
 import axios from 'axios';
 import config from "./../core/config";
 
+function convert_to_bool(text){
+  if (text == 'Да'){
+    return true;
+  }
+  if (text == 'Нет'){
+    return false;
+  }
+  return null;
+}
+
 class AddRequest extends React.Component{
   constructor(props) {
       super(props);
+      let now = new Date(Date.now());
+      let oneHLater = new Date(Date.now());
+      oneHLater.setHours(oneHLater.getHours()+1);
+      console.log(now.toISOString().substr(0, 16));
       this.state = {
           capacity: "1", capacityPriority: "0",
           hasProjector: "Не важно", hasProjectorPriority: "0",
@@ -15,7 +29,9 @@ class AddRequest extends React.Component{
           computerCount: "0", computerCountPriority: "0",
           microphoneCount: "0", microphoneCountPriority: "0",
           hasInternet: "Не важно", hasInternetPriority: "0",
-          hasSpeakers: "Не важно", hasSpeakersPriority: "0"
+          hasSpeakers: "Не важно", hasSpeakersPriority: "0",
+          time_from: now.toISOString().substr(0, 16),
+          time_till: oneHLater.toISOString().substr(0, 16)
       };
       this.addRequest = this.addRequest.bind(this);
       this.handleChange = this.handleChange.bind(this);
@@ -24,19 +40,19 @@ class AddRequest extends React.Component{
 
   addRequest() {
     let self = this;
-    axios(config.BACKEND_URL+'/audit/add_request/', {
+    axios(config.BACKEND_URL+'/audit/add_booking/', {
         method: "POST",
         data: {
             capacity: self.state.capacity,
-            has_projector: self.state.hasProjector,
-            has_whiteboard: self.state.hasWhiteboard,
+            has_projector: convert_to_bool(self.state.hasProjector),
+            has_whiteboard: convert_to_bool(self.state.hasWhiteboard),
             volume: self.state.volume,
-            has_air_conditioning: self.state.hasAirConditioning,
-            has_noise_isolation: self.state.hasNoiseIsolation,
+            has_air_conditioning: convert_to_bool(self.state.hasAirConditioning),
+            has_noise_isolation: convert_to_bool(self.state.hasNoiseIsolation),
             computer_count: self.state.computerCount,
             micro_count: self.state.microphoneCount,
-            has_internet: self.state.hasInternet,
-            has_speakers: self.state.hasSpeakers,
+            has_internet: convert_to_bool(self.state.hasInternet),
+            has_speakers: convert_to_bool(self.state.hasSpeakers),
             capacity_coef: self.state.capacity,
             has_projector_coef: self.state.hasProjectorPriority,
             has_whiteboard_coef: self.state.hasWhiteboardPriority,
@@ -47,9 +63,12 @@ class AddRequest extends React.Component{
             micro_count_coef: self.state.microphoneCountPriority,
             has_internet_coef: self.state.hasInternetPriority,
             has_speakers_coef: self.state.hasSpeakersPriority,
+            time_from: self.state.time_from,
+            time_till: self.state.time_till
         },
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'token ' + localStorage.getItem('token'),
         }
     })
         .then(function (response) {
@@ -252,6 +271,12 @@ class AddRequest extends React.Component{
 
   handleChange(e) {
       switch(e.target.name) {
+          case("time-from"):
+              this.setState({time_from: e.target.value});
+              break;
+          case("time-till"):
+              this.setState({time_till: e.target.value});
+              break;
           case("capacity"):
               if (Number.isNaN(parseInt(e.target.value))){
                 e.target.value = '1';
@@ -321,6 +346,17 @@ class AddRequest extends React.Component{
                         <h3>Создание Запроса</h3>
                       </div>
                       <div style={{marginTop: "10px"}}>
+                        <div className="col-md-8">
+                          <label htmlFor="time_from">Начало</label>
+                          <input type="datetime-local"
+                          name="time-from" value={self.state.time_from} onChange={self.handleChange} />
+                        </div>
+                        <div className="col-md-8">
+                          <label htmlFor="time_till">Конец</label>
+                          <input type="datetime-local"
+                          name="time-till" value={self.state.time_till} onChange={self.handleChange} />
+                        </div>
+
                          {self.returnInputFor("capacity")}
                          {self.returnDropdownFor("hasProjector")}
                          {self.returnDropdownFor("hasWhiteboard")}
@@ -332,7 +368,7 @@ class AddRequest extends React.Component{
                          {self.returnInputFor("microphoneCount")}
                          {self.returnDropdownFor("hasSpeakers")}
                          <div className="form-group" style={{textAlign: "center"}}>
-                             <button className="btn btn-primary" onClick={self.addRequest}>Submit</button>
+                             <button className="btn btn-primary" onClick={self.addRequest}>Отправить</button>
                          </div>
                       </div>
                   </div>

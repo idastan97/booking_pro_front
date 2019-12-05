@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import NavigationBar from "./NavigationBar";
 
 class Home extends Component {
     constructor(props) {
@@ -12,6 +13,7 @@ class Home extends Component {
     render(){
         return (
             <div className="container-fluid">
+                    <NavigationBar gstate={this.props.gstate}/>
                     <div className="row">
                         <h1>Home</h1>
                     </div>
