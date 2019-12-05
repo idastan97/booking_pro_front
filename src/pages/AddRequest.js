@@ -31,7 +31,10 @@ class AddRequest extends React.Component{
           hasInternet: "Не важно", hasInternetPriority: "0",
           hasSpeakers: "Не важно", hasSpeakersPriority: "0",
           time_from: now.toISOString().substr(0, 16),
-          time_till: oneHLater.toISOString().substr(0, 16)
+          time_till: oneHLater.toISOString().substr(0, 16),
+          title: "",
+          message: "",
+          error: false
       };
       this.addRequest = this.addRequest.bind(this);
       this.handleChange = this.handleChange.bind(this);
@@ -64,7 +67,8 @@ class AddRequest extends React.Component{
             has_internet_coef: self.state.hasInternetPriority,
             has_speakers_coef: self.state.hasSpeakersPriority,
             time_from: self.state.time_from,
-            time_till: self.state.time_till
+            time_till: self.state.time_till,
+            title: self.state.title
         },
         headers: {
             'Content-Type': 'application/json',
@@ -78,9 +82,11 @@ class AddRequest extends React.Component{
             // localStorage.setItem('userId', response.data[1]);
             // self.props.login(self.state.email.toLowerCase());
             // self.props.authorize(response.data.token, self.state.email);
+            self.setState({message: "Успешно", error: false})
         })
         .catch(function (error) {
             console.log(error);
+            self.setState({message: error.response.data, error: true});
           });
   }
 
@@ -112,7 +118,7 @@ class AddRequest extends React.Component{
 
     let criteriaPriority = criteria + "Priority";
 
-    return (<div className="form-group row" style={{textAlign: "center"}} >
+    return (<div className="form-group row" style={{textAlign: "left"}} >
       <div className="col-md-8">
         <label htmlFor={criteria}>{labelName}</label>
         <select className="form-control" id={criteria} name={criteria} onChange ={this.handleChange}>
@@ -156,7 +162,7 @@ class AddRequest extends React.Component{
 
     let criteriaPriority = criteria + "Priority";
 
-    return (<div className="form-group row" style={{textAlign: "center", marginTop: "10px"}}>
+    return (<div className="form-group row" style={{textAlign: "left", marginTop: "10px"}}>
           <div className="col-md-8">
             <label htmlFor={criteria}>{labelName}</label>
             <input name={criteria} type="number" min={1} pattern="[0-9]*" inputMode="numeric" className="form-control" id={criteria}
@@ -271,6 +277,9 @@ class AddRequest extends React.Component{
 
   handleChange(e) {
       switch(e.target.name) {
+          case("title"):
+              this.setState({title: e.target.value});
+              break;
           case("time-from"):
               this.setState({time_from: e.target.value});
               break;
@@ -339,19 +348,46 @@ class AddRequest extends React.Component{
       let self = this;
 
       return (
+          <div>
+              <nav className="navbar navbar-dark bg-dark navbar-expand-lg">
+                  <a className="navbar-brand" href="/">Home</a>
+                  <button className="navbar-toggler" type="button" data-toggle="collapse"
+                          data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
+                          aria-label="Toggle navigation">
+                      <span className="navbar-toggler-icon"></span>
+                  </button>
+                  <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+                      <div className="navbar-nav">
+                          <a className="nav-item nav-link active" href="/addAuditory">Добавить аудиторию <span
+                              className="sr-only">(current)</span></a>
+                      </div>
+
+                  </div>
+                  <form className="form-inline my-2 my-lg-0">
+                      {/*<input className="form-control mr-sm-2" type="search" placeholder="Search"*/}
+                      {/*       aria-label="Search"/>*/}
+                      <button className="btn btn-outline-danger my-2 my-sm-0" type="submit" onClick={this.props.logout}>Выйти</button>
+                  </form>
+              </nav>
           <div className="container-fluid">
               <div className="row">
                   <div style={{margin: "auto", width: "500px"}}>
-                      <div style={{textAlign: "center", marginTop: "10px", border: "1px solid blue"}}>
+                      <div style={{textAlign: "center", marginTop: "10px"}}>
                         <h3>Создание Запроса</h3>
                       </div>
                       <div style={{marginTop: "10px"}}>
-                        <div className="col-md-8">
+
+                          <div className="form-group" style={{textAlign: "left", marginTop: "10px"}}>
+                              <label htmlFor="title">Название</label>
+                              <input name="title" type="text" className="form-control" id="title"
+                                     onChange ={this.handleChange} value={self.state.title}/>
+                          </div>
+                        <div className="form-group" style={{textAlign: "left", marginTop: "10px"}}>
                           <label htmlFor="time_from">Начало</label>
                           <input type="datetime-local"
                           name="time-from" value={self.state.time_from} onChange={self.handleChange} />
                         </div>
-                        <div className="col-md-8">
+                        <div className="form-group" style={{textAlign: "left", marginTop: "10px"}}>
                           <label htmlFor="time_till">Конец</label>
                           <input type="datetime-local"
                           name="time-till" value={self.state.time_till} onChange={self.handleChange} />
@@ -367,12 +403,16 @@ class AddRequest extends React.Component{
                          {self.returnInputFor("computerCount")}
                          {self.returnInputFor("microphoneCount")}
                          {self.returnDropdownFor("hasSpeakers")}
+                          <div className="form-group">
+                              <p className={self.state.error ? "text-danger" : "text-success"} >{self.state.message}</p>
+                          </div>
                          <div className="form-group" style={{textAlign: "center"}}>
-                             <button className="btn btn-primary" onClick={self.addRequest}>Отправить</button>
+                             <button className="btn btn-dark" onClick={self.addRequest}>Отправить</button>
                          </div>
                       </div>
                   </div>
               </div>
+          </div>
           </div>
       );
   }

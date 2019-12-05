@@ -72,10 +72,34 @@ class Register extends Component {
 
     render(){
         return (
+            <div>
+                <nav className="navbar navbar-dark bg-dark navbar-expand-lg">
+                    <a className="navbar-brand" ></a>
+                    <button className="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
+                            aria-label="Toggle navigation">
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
+                    <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+                        {/*<div className="navbar-nav">*/}
+                        {/*    <a className="nav-item nav-link active" href="/">Register <span*/}
+                        {/*        className="sr-only">(current)</span></a>*/}
+                        {/*</div>*/}
+
+                    </div>
+                    <div className="form-inline my-2 my-lg-0">
+                        {/*<input className="form-control mr-sm-2" type="search" placeholder="Search"*/}
+                        {/*       aria-label="Search"/>*/}
+                        <a href="/login"><button className="btn btn-outline-danger my-2 my-sm-0" >Войти</button></a>
+                    </div>
+                </nav>
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-4 offset-md-4">
-                        <div>
+                        <div style={{textAlign: "center"}}>
+                            <div style={{marginTop: "10px"}}>
+                                <h3>Регистрация</h3>
+                            </div>
                             <div className="form-group">
                                 <label htmlFor="exampleInputFirstName">First Name</label>
                                 <input name="first_name" type="text" className="form-control" id="exampleInputFirstName"
@@ -91,8 +115,6 @@ class Register extends Component {
                                 <input name="email" type="email" className="form-control" id="exampleInputEmail1"
                                        aria-describedby="emailHelp" placeholder="Enter email"
                                        onChange ={this.handleChange} value={this.state.email}/>
-                                <small id="emailHelp" className="form-text text-muted">We'll never share your email with
-                                    anyone else.</small>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="exampleInputPassword1">Password</label>
@@ -104,18 +126,15 @@ class Register extends Component {
                                 <input name="confirm_password" type="password" className="form-control" id="exampleConfirmInputPassword1"
                                         onChange ={this.handleChange} value={this.state.confirm_password}/>
                             </div>
-                            <div className="form-group form-check">
-                                <input type="checkbox" className="form-check-input" id="exampleCheck1"/>
-                                <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
-                            </div>
                             <div className="form-group">
                                 <label>{this.state.errormsg}</label>
                             </div>
-                            <button className="btn btn-primary" onClick={this.register}>Submit</button>
+                            <button className="btn btn-dark" onClick={this.register}>Submit</button>
                         </div>
                     </div>
                 </div>
             </div>
+                </div>
         );
     }
 }

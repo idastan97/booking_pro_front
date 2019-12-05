@@ -26,6 +26,9 @@ class AddAuditory extends React.Component{
           microphoneCount: "0",
           hasInternet: "Не важно",
           hasSpeakers: "Не важно",
+          room_num: "",
+          message: "",
+          error: false
       };
       this.addAuditory = this.addAuditory.bind(this);
       this.handleChange = this.handleChange.bind(this);
@@ -46,6 +49,7 @@ class AddAuditory extends React.Component{
             micro_count: convert_to_bool(self.state.microphoneCount),
             has_internet: convert_to_bool(self.state.hasInternet),
             has_speakers: convert_to_bool(self.state.hasSpeakers),
+            room_number: self.state.room_num
         },
         headers: {
             'Content-Type': 'application/json',
@@ -59,9 +63,11 @@ class AddAuditory extends React.Component{
             // localStorage.setItem('userId', response.data[1]);
             // self.props.login(self.state.email.toLowerCase());
             // self.props.authorize(response.data.token, self.state.email);
+            self.setState({message: "Успешно", error: false})
         })
         .catch(function (error) {
             console.log(error);
+            self.setState({message: error.response.data, error: true});
           });
   }
 
@@ -90,7 +96,7 @@ class AddAuditory extends React.Component{
         default:
     }
 
-    return (<div className="form-group" style={{textAlign: "center"}} >
+    return (<div className="form-group" style={{textAlign: "left"}} >
         <label htmlFor={criteria}>{labelName}</label>
         <select className="form-control" id={criteria} name={criteria} onChange ={this.handleChange}>
           <option>Не важно</option>
@@ -126,7 +132,7 @@ class AddAuditory extends React.Component{
 
     let criteriaPriority = criteria + "Priority";
 
-    return (<div className="form-group" style={{textAlign: "center", marginTop: "10px"}}>
+    return (<div className="form-group" style={{textAlign: "left", marginTop: "10px"}}>
             <label htmlFor={criteria}>{labelName}</label>
             <input name={criteria} type="number" min={1} pattern="[0-9]*" inputMode="numeric" className="form-control" id={criteria}
                   onChange ={this.handleChange} value={value}/>
@@ -135,6 +141,9 @@ class AddAuditory extends React.Component{
 
   handleChange(e) {
       switch(e.target.name) {
+          case("room_num"):
+              this.setState({room_num: e.target.value});
+              break;
           case("capacity"):
               if (Number.isNaN(parseInt(e.target.value))){
                 e.target.value = '1';
@@ -197,13 +206,39 @@ class AddAuditory extends React.Component{
       let self = this;
 
       return (
+          <div>
+          <nav className="navbar navbar-dark bg-dark navbar-expand-lg">
+              <a className="navbar-brand" href="/">Home</a>
+              <button className="navbar-toggler" type="button" data-toggle="collapse"
+                      data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
+                      aria-label="Toggle navigation">
+                  <span className="navbar-toggler-icon"></span>
+              </button>
+              <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+                  <div className="navbar-nav">
+                      <a className="nav-item nav-link active" href="/addRequest">Добавить запрос <span
+                          className="sr-only">(current)</span></a>
+                  </div>
+
+              </div>
+              <form className="form-inline my-2 my-lg-0">
+                  {/*<input className="form-control mr-sm-2" type="search" placeholder="Search"*/}
+                  {/*       aria-label="Search"/>*/}
+                  <button className="btn btn-outline-danger my-2 my-sm-0" type="submit" onClick={this.props.logout}>Выйти</button>
+              </form>
+          </nav>
           <div className="container-fluid">
               <div className="row">
                   <div style={{margin: "auto", width: "500px"}}>
-                      <div style={{textAlign: "center", marginTop: "10px", border: "1px solid blue"}}>
+                      <div style={{textAlign: "center", marginTop: "10px"}}>
                         <h3>Добавление Аудитории</h3>
                       </div>
                       <div style={{marginTop: "10px"}}>
+                          <div className="form-group" style={{textAlign: "left", marginTop: "10px"}}>
+                              <label htmlFor="room_num">Номер Кабинета</label>
+                              <input name="room_num" type="text" className="form-control" id="room_num"
+                                     onChange ={this.handleChange} value={self.state.room_num}/>
+                          </div>
                          {self.returnInputFor("capacity")}
                          {self.returnDropdownFor("hasProjector")}
                          {self.returnDropdownFor("hasWhiteboard")}
@@ -214,12 +249,16 @@ class AddAuditory extends React.Component{
                          {self.returnInputFor("computerCount")}
                          {self.returnInputFor("microphoneCount")}
                          {self.returnDropdownFor("hasSpeakers")}
+                         <div className="form-group">
+                             <p className={self.state.error ? "text-danger" : "text-success"} >{self.state.message}</p>
+                         </div>
                          <div className="form-group" style={{textAlign: "center"}}>
-                             <button className="btn btn-primary" onClick={self.addAuditory}>Отправить</button>
+                             <button className="btn btn-dark" onClick={self.addAuditory}>Отправить</button>
                          </div>
                       </div>
                   </div>
               </div>
+          </div>
           </div>
       );
   }
