@@ -128,7 +128,7 @@ class AddRequest extends React.Component{
         </select>
       </div>
       <div className="col-md-4">
-        <label htmlFor={criteriaPriority}>{"Важность"}</label>
+        <label htmlFor={criteriaPriority}>{"Важность [0-10]"}</label>
         <input name={criteriaPriority} type="number" min={0} max={10} inputMode="numeric" className="form-control" id={criteriaPriority}
               onChange ={this.handlePriorityChange} value={priorityValue}/>
       </div>
@@ -146,7 +146,7 @@ class AddRequest extends React.Component{
             value = this.state.capacity; priorityValue = this.state.capacityPriority;
             break;
         case("volume"):
-            labelName = "Объём Аудитории (1 и выше)";
+            labelName = "Площадь Аудитории (1 и выше)";
             value = this.state.volume; priorityValue = this.state.volumePriority;
             break;
         case("computerCount"):
@@ -165,11 +165,11 @@ class AddRequest extends React.Component{
     return (<div className="form-group row" style={{textAlign: "left", marginTop: "10px"}}>
           <div className="col-md-8">
             <label htmlFor={criteria}>{labelName}</label>
-            <input name={criteria} type="number" min={1} pattern="[0-9]*" inputMode="numeric" className="form-control" id={criteria}
+            <input name={criteria} type="number" pattern="[0-9]*" inputMode="numeric" className="form-control" id={criteria}
                   onChange ={this.handleChange} value={value}/>
           </div>
           <div className="col-md-4">
-            <label htmlFor={criteriaPriority}>{"Важность"}</label>
+            <label htmlFor={criteriaPriority}>{"Важность [0-10]"}</label>
             <input name={criteriaPriority} type="number" min={0} max={10} inputMode="numeric" className="form-control" id={criteriaPriority}
                   onChange ={this.handlePriorityChange} value={priorityValue}/>
           </div>
@@ -288,8 +288,8 @@ class AddRequest extends React.Component{
               break;
           case("capacity"):
               if (Number.isNaN(parseInt(e.target.value))){
-                e.target.value = '1';
-                this.setState({capacity: '1'});
+                e.target.value = '0';
+                this.setState({capacity: '0'});
               } else {
                 e.target.value = parseInt(e.target.value);
                 this.setState({capacity: parseInt(e.target.value)});
@@ -303,8 +303,8 @@ class AddRequest extends React.Component{
               break;
           case("volume"):
               if (Number.isNaN(parseInt(e.target.value))){
-                e.target.value = '1';
-                this.setState({volume: '1'});
+                e.target.value = '0';
+                this.setState({volume: '0'});
               } else {
                 e.target.value = parseInt(e.target.value);
                 this.setState({volume: parseInt(e.target.value)});

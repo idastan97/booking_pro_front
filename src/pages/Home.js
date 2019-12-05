@@ -38,10 +38,12 @@ class Home extends Component {
         super(props);
         this.state = {
             items: null,
-            groups: null
+            groups: null,
+            new_reqs: []
         };
         this.redistribute = this.redistribute.bind(this);
         this.get_data = this.get_data.bind(this);
+        this.get_new_reqs = this.get_new_reqs.bind(this);
     }
 
     redistribute(){
@@ -91,11 +93,38 @@ class Home extends Component {
             });
     }
 
+    get_new_reqs(){
+        let self = this;
+        axios(config.BACKEND_URL+'/audit/get_newreqs/', {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'token ' + localStorage.getItem('token'),
+            }
+        })
+            .then(function (response) {
+                console.log(response.data);
+                // localStorage.setItem('email', response.data[0]);
+                // localStorage.setItem('userId', response.data[1]);
+                // self.login(response.data[0].toLowerCase());
+                // let new_items = [];
+                // for (let i=0; i<response.data.length; i++){
+                //
+                // }
+                self.setState({new_reqs: response.data});
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
     componentDidMount() {
         this.get_data();
+        this.get_new_reqs();
     }
 
     render(){
+        let self = this;
         return (
             <div>
                 <nav className="navbar navbar-dark bg-dark navbar-expand-lg">
@@ -124,7 +153,12 @@ class Home extends Component {
                     {/*<NavigationBar gstate={this.props.gstate}/>*/}
 
                     <div className="row">
-                        <h1>Home</h1>
+                        <h1>Расписание</h1>
+                    </div>
+                    <div className="row">
+                        <div className="col-md-2">
+                            <p>id: Номер Кабинета</p>
+                        </div>
                     </div>
                     <div>
                         {
@@ -136,6 +170,21 @@ class Home extends Component {
                             /> : <div/>
                         }
                     </div>
+                <div className="container">
+                    <div className="row" style={{marginTop: "30px"}}>
+                        <div className="col-md-4">
+                            <h3>Новые запросы:</h3>
+                            <p>id: Название</p>
+                        </div>
+                    </div>
+                    {self.state.new_reqs.map((item, index) => {
+                        return (<div className="row" key={index} style={{margin: "20px"}}>
+                            <div className="col-md-4" style={{backgroundColor: "lightgrey"}}>
+                            {item.id}: {item.title}
+                            </div>
+                        </div>)
+                    })}
+                </div>
                     <div className="container" style={{margin: "10px"}}>
                         <div className="row">
                             <button type="submit" className="btn btn-dark" onClick={this.redistribute}>Redistribute</button>

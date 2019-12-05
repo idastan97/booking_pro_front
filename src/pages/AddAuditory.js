@@ -134,7 +134,7 @@ class AddAuditory extends React.Component{
 
     return (<div className="form-group" style={{textAlign: "left", marginTop: "10px"}}>
             <label htmlFor={criteria}>{labelName}</label>
-            <input name={criteria} type="number" min={1} pattern="[0-9]*" inputMode="numeric" className="form-control" id={criteria}
+            <input name={criteria} type="number" pattern="[0-9]*" inputMode="numeric" className="form-control" id={criteria}
                   onChange ={this.handleChange} value={value}/>
           </div>);
   }
@@ -146,8 +146,8 @@ class AddAuditory extends React.Component{
               break;
           case("capacity"):
               if (Number.isNaN(parseInt(e.target.value))){
-                e.target.value = '1';
-                this.setState({capacity: '1'});
+                e.target.value = '0';
+                this.setState({capacity: '0'});
               } else {
                 e.target.value = parseInt(e.target.value);
                 this.setState({capacity: parseInt(e.target.value)});
@@ -161,8 +161,8 @@ class AddAuditory extends React.Component{
               break;
           case("volume"):
               if (Number.isNaN(parseInt(e.target.value))){
-                e.target.value = '1';
-                this.setState({volume: '1'});
+                e.target.value = '0';
+                this.setState({volume: '0'});
               } else {
                 e.target.value = parseInt(e.target.value);
                 this.setState({volume: parseInt(e.target.value)});
